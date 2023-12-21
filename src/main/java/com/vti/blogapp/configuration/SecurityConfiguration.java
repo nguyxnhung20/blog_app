@@ -24,11 +24,15 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(customizer -> customizer
+                        .requestMatchers(HttpMethod.DELETE)
+                        .hasAuthority("SCOPE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/users")
                         .permitAll()
                         .anyRequest()
                         .authenticated()
                 )
+                .oauth2ResourceServer(customizer -> customizer
+                        .jwt(Customizer.withDefaults()))
                 .sessionManagement(customizer -> customizer
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(customizer -> customizer
